@@ -17,7 +17,7 @@ def ejemplo_listas_ligadas():
 def main():
     while True:
         mostrar_menu()
-        opcion = input("Seleccione una opción: ")
+        opcion = input("Seleccione una opción: \n")
         
         if opcion == "1":
             ejemplo_vector_bits()
