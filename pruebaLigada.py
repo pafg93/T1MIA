@@ -64,4 +64,12 @@ def pruebasLigadas():
     fin_tiempo = time.time()
     print(f"Tiempo de asignación: {fin_tiempo - inicio_tiempo} segundos")
     lista_memoria.generarGraphviz("4")
-
+    time.sleep(1)
+    print("Liberar de pruebas.txt 4MB")
+    inicio_tiempo = time.time()
+    # Prueba 4: Liberar un bloque
+    print("Liberar bloque 2 de 1398101.34 bytes")
+    lista_memoria.liberarBloque(id2, 1)
+    fin_tiempo = time.time()
+    print(f"Tiempo de liberación: {fin_tiempo - inicio_tiempo} segundos")
+    lista_memoria.generarGraphviz("5")

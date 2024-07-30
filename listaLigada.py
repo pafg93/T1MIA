@@ -110,6 +110,7 @@ class ListaLigada:
                         auxSiguiente = temp.bloqueSiguiente
                         auxAnterior.bloqueSiguiente = auxSiguiente
                         auxSiguiente.bloqueAnterior = auxAnterior
+                        auxSiguiente.valor.segmento = auxSiguiente.valor.segmento - 1
                         temp.bloqueAnterior = None
                         temp.bloqueSiguiente = None
                     return
