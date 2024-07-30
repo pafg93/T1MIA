@@ -1,4 +1,5 @@
 from vectorBits import metodo_vector_bits
+from pruebaLigada import pruebasLigadas
 import os
 import time
 
@@ -55,7 +56,7 @@ def ejemplo_vector_bits():
 
 def ejemplo_listas_ligadas():
     print("Ejemplo de asignación por Listas Ligadas")
-    # Aquí puedes agregar el código correspondiente a la asignación por Listas Ligadas
+    pruebasLigadas()
     print("")
 
 def limpiar_consola():
