@@ -19,6 +19,8 @@ class ListaLigada:
         self.capacidad = tamaño
         self.datosFilas = ListaEncabezados()
         self.datosColumnas = ListaEncabezados()
+        self.longitudNombre = 0
+        self.saltos = 0
         self.asignaciónEncabezados(filas, columnas)
 
     def asignaciónEncabezados(self, filas, columnas):
@@ -50,9 +52,14 @@ class ListaLigada:
 
     def agregarBloque(self, id, valor):
         self.capacidad -= valor.tamaño
+        if len(valor.nombre) > self.longitudNombre:
+            self.longitudNombre = len(valor.nombre) + 8
+        elif len(str(valor.tamaño)) > self.longitudNombre:
+            self.longitudNombre = len(str(valor.tamaño)) + 3
         temp = None
         aux = self.datosFilas.principio
         if aux.referencia.valor is None:
+            self.saltos = 2
             aux.referencia.valor = valor
         else:
             bandera = False
@@ -89,7 +96,26 @@ class ListaLigada:
                     return temp
                 temp = temp.siguiente
             actual = actual.siguiente
-
+            
+    def liberarBloque(self, id, segmento):
+        actual = self.datosFilas.principio
+        while actual is not None:
+            temp = actual.referencia
+            while temp is not None:
+                if temp.valor.id is id and temp.valor.segmento == segmento:
+                    self.capacidad += temp.valor.tamaño
+                    temp.valor = None
+                    if temp.bloqueSiguiente is not None:
+                        auxAnterior = temp.bloqueAnterior
+                        auxSiguiente = temp.bloqueSiguiente
+                        auxAnterior.bloqueSiguiente = auxSiguiente
+                        auxSiguiente.bloqueAnterior = auxAnterior
+                        temp.bloqueAnterior = None
+                        temp.bloqueSiguiente = None
+                    return
+                temp = temp.siguiente
+            actual = actual.siguiente
+    
     def recorrerFilas(self):
         grafo=""
         grafo2 = ""
@@ -100,6 +126,9 @@ class ListaLigada:
         rFila = self.datosFilas.principio
         cont = 2
         auxRecorrido = None
+        espacios = ' ' * self.longitudNombre
+        saltos_linea = '\n' * self.saltos
+        formato = espacios + saltos_linea
         while rFila is not None:
             grafo5 += "{rank=same;"
             grafo += f'nodof{rFila.valor} [label=\" {rFila.valor} \" group=1]\n'
@@ -111,7 +140,7 @@ class ListaLigada:
             while temp is not None:
                 grafo5 += f"nodo{temp.fila}_{temp.columna};"
                 if temp.valor is None:
-                    grafo3 += f"nodo{temp.fila}_{temp.columna}[label=\" \" group={cont}]\n"
+                    grafo3 += f"nodo{temp.fila}_{temp.columna}[label=\"{formato}\" group={cont}]\n"
                 else:
                     grafo3 += f"nodo{temp.fila}_{temp.columna}[label=\"{temp.valor.nombre}\n{temp.valor.tamaño}\n{temp.valor.segmento}\" group={cont} fillcolor=\"green\"]\n"
                     if temp.valor.segmento == 0:
@@ -158,26 +187,7 @@ class ListaLigada:
         grafo += grafo5
         grafo += grafo3
         return grafo
-            
-    def liberarBloque(self, id, segmento):
-        actual = self.datosFilas.principio
-        while actual is not None:
-            temp = actual.referencia
-            while temp is not None:
-                if temp.valor.id is id and temp.valor.segmento == segmento:
-                    self.capacidad += temp.valor.tamaño
-                    temp.valor = None
-                    if temp.bloqueSiguiente is not None:
-                        auxAnterior = temp.bloqueAnterior
-                        auxSiguiente = temp.bloqueSiguiente
-                        auxAnterior.bloqueSiguiente = auxSiguiente
-                        auxSiguiente.bloqueAnterior = auxAnterior
-                        temp.bloqueAnterior = None
-                        temp.bloqueSiguiente = None
-                    return
-                temp = temp.siguiente
-            actual = actual.siguiente
-    
+
     def generarGraphviz(self, numImagen):
         nombreArchivo= f"lista_enlazada{numImagen}.dot"
         grafica = "digraph G{\nlabel=\" Disco 25MB\nCapacidad: "+str(self.capacidad)+"\";\n"
